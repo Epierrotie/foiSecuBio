@@ -2,11 +2,14 @@ import FirebaseApi from '@/services/FirebaseApi'
 
 export default {
   encrypt (file) {
+    console.log(file)
+    let form = new FormData()
+    form.append('file', file)
     return FirebaseApi().post('encrypt', {
-      'file': file
+      data: form
     }, {
       headers: {
-        'Content-Type': 'multipart/form'
+        Accept: '*'
       }
     })
   },
@@ -15,7 +18,7 @@ export default {
       'file': file
     }, {
       headers: {
-        'Content-Type': 'multipart/from'
+        'Content-Type': 'multipart/form-data'
       }
     })
   }
