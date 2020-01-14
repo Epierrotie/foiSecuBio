@@ -11,8 +11,9 @@ const cors = require('cors')({
   origin: true,
 });
 
+
 exports = module.exports = functions.https.onRequest(
-  (req, res) => {
+  async (req, res) => {
     return cors(req, res, () => {
       if (req.method === "POST") {
         let result;
@@ -42,6 +43,7 @@ exports = module.exports = functions.https.onRequest(
       } else {
         res.sendStatus(400);
       }
-    })
+    }
+    )
   }
 );
