@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from '@/store/store'
-import { sync } from 'vuex-router-sync'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 
@@ -10,13 +8,10 @@ Vue.use(Buefy)
 
 Vue.config.productionTip = false
 
-sync(store, router)
-
 // eslint-disable-next-line
 new Vue({
   el: '#app',
   router,
-  store,
   components: { App },
   template: '<App/>'
 })
