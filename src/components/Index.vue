@@ -37,7 +37,7 @@ export default {
           .signInWithEmailAndPassword(this.email, this.password)
         this.$router.push({ name: 'Home' })
       } catch (e) {
-        alert('🤕' + e.message)
+        alert('🤕 ' + e.message)
       }
     },
     async signUpWithEmailAndPass () {
@@ -47,7 +47,7 @@ export default {
           .createUserWithEmailAndPassword(this.email, this.password)
         this.$router.push({ name: 'Home' })
       } catch (e) {
-        alert('🤕' + e.message)
+        alert('🤕 ' + e.message)
       }
     },
     async signInWithGoogle () {
@@ -56,7 +56,7 @@ export default {
         await firebase.auth().signInWithPopup(provider)
         this.$router.push({ name: 'Home' })
       } catch (e) {
-        alert('🤕' + e.message)
+        alert('🤕 ' + e.message)
       }
     }
   }
