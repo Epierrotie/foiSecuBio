@@ -28,7 +28,7 @@
 
 <script>
 import FaceRecognition from '@/services/FaceRecognition'
-import Cryptography from '@/services/Cryptography'
+import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -55,21 +55,26 @@ export default {
       this.image = this.canvas.toDataURL('image/png')
     },
     async encrypt () {
-      try {
-        if (this.image && this.file) {
-          const res = await FaceRecognition.enroll(this.image, 'Joffrey')
-          console.log(res.data)
-          if (res.data.Errors) {
-            alert('🤕 ' + res.data.Errors[0].Message)
-          } else {
-            const file = await Cryptography.encrypt(this.file.file)
-            console.log(file)
-          }
-        } else {
-          alert('🤕 Take a photo and select a file before encrypting')
-        }
-      } catch (e) {
-        alert('🤕 ' + e)
+      if (this.image && this.file) {
+        const res = await FaceRecognition.enroll(this.image, 'Joffrey')
+        console.log(res.data)
+        console.log(this.file)
+        let form = new FormData()
+        form.append('file', this.file)
+        axios({
+          method: 'post',
+          url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/encrypt',
+          data: form,
+          headers: {'Content-Type': 'multipart/form-data'}
+        })
+          .then(r => {
+            console.log(r)
+          })
+          .catch(e => {
+            console.log(e)
+          })
+      } else {
+        alert('🤕 Take a photo and select a file before encrypting')
       }
     },
     async decrypt () {
@@ -80,8 +85,21 @@ export default {
           if (res.data.Errors) {
             alert('🤕 ' + res.data.Errors[0].Message)
           } else {
-            const file = await Cryptography.decrypt(this.file.file)
-            console.log(file)
+            let form = new FormData()
+            form.append('file', this.file)
+            axios({
+              method: 'post',
+              url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/decrypt',
+              data: form,
+              headers: {'Content-Type': 'multipart/form-data'}
+            })
+              .then(r => {
+                console.log(r)
+              })
+              .catch(e => {
+                console.log(e)
+              })
+            //  console.log(file)
           }
         } else {
           alert('🤕 Take a photo and select a file before decrypting')
