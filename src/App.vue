@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 
 // Initialize Firebase
 var config = {
@@ -17,13 +17,13 @@ var config = {
   projectId: process.env.VUE_APP_PROJECT_ID,
   storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID
-};
+}
 
-firebase.initializeApp(config);
+firebase.initializeApp(config)
 
 export default {
-  name: "App"
-};
+  name: 'App'
+}
 </script>
 
 <style>
