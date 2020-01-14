@@ -5,7 +5,7 @@ const fs = require('fs');
 const functions = require('firebase-functions');
 const Busboy = require('busboy');
 const Cryptr = require('cryptr');
-const cryptr = new Cryptr('myTotalySecretKey');
+const cryptr = new Cryptr(process.env.ENCRYPTPASS | 'myTotalySecretKey');
 
 
 exports = module.exports = functions.https.onRequest(async (req, res) => {
