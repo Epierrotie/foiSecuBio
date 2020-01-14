@@ -9,7 +9,8 @@ export default {
       data: form
     }, {
       headers: {
-        Accept: '*'
+        Accept: '*',
+        'Content-Type': 'multipart/form-data'
       }
     })
   },
@@ -18,7 +19,7 @@ export default {
       'file': file
     }, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/from-data'
       }
     })
   }
