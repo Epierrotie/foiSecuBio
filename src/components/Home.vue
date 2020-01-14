@@ -89,7 +89,7 @@ export default {
             form.append('file', this.file)
             axios({
               method: 'post',
-              url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/encrypt',
+              url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/decrypt',
               data: form,
               headers: {'Content-Type': 'multipart/form-data'}
             })
