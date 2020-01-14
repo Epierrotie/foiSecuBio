@@ -8,10 +8,6 @@
     </div>
     <canvas ref="canvas" id="canvas" width="640" height="480"></canvas>
     <img v-bind:src="image" height="50" />
-    <div>
-      <b-button id="send" v-on:click="encrypt()">Encrypt</b-button>
-      <b-button id="send" v-on:click="decrypt()">Decrypt</b-button>
-    </div>
     <section>
       <b-field class="file">
         <b-upload v-model="file">
@@ -23,12 +19,18 @@
         <span class="file-name" v-if="file">{{ file.name }}</span>
       </b-field>
     </section>
+    <div>
+      <b-button id="send" v-on:click="encrypt()">Encrypt</b-button>
+      <b-button id="send" v-on:click="decrypt()">Decrypt</b-button>
+    </div>
   </div>
 </template>
 
 <script>
 import FaceRecognition from '@/services/FaceRecognition'
 import axios from 'axios'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 export default {
   name: 'Home',
@@ -55,51 +57,53 @@ export default {
       this.image = this.canvas.toDataURL('image/png')
     },
     async encrypt () {
-      if (this.image && this.file) {
-        const res = await FaceRecognition.enroll(this.image, 'Joffrey')
-        console.log(res.data)
-        console.log(this.file)
-        let form = new FormData()
-        form.append('file', this.file)
-        axios({
-          method: 'post',
-          url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/encrypt',
-          data: form,
-          headers: {'Content-Type': 'multipart/form-data'}
-        })
-          .then(r => {
-            console.log(r)
-          })
-          .catch(e => {
-            console.log(e)
-          })
-      } else {
-        alert('🤕 Take a photo and select a file before encrypting')
-      }
-    },
-    async decrypt () {
       try {
         if (this.image && this.file) {
-          const res = await FaceRecognition.verify(this.image, 'Joffrey')
-          console.log(res.data)
+          const res = await FaceRecognition.enroll(this.image, firebase.auth().currentUser.email)
+          console.log(res)
           if (res.data.Errors) {
             alert('🤕 ' + res.data.Errors[0].Message)
           } else {
             let form = new FormData()
             form.append('file', this.file)
-            axios({
+            const file = await axios({
               method: 'post',
-              url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/decrypt',
+              url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/encrypt',
               data: form,
               headers: {'Content-Type': 'multipart/form-data'}
             })
-              .then(r => {
-                console.log(r)
+            this.saveFile(file.data)
+            console.log(file)
+          }
+        } else {
+          alert('🤕 Take a photo and select a file before encrypting')
+        }
+      } catch (e) {
+        alert('🤕 ' + e)
+      }
+    },
+    async decrypt () {
+      try {
+        if (this.image && this.file) {
+          const res = await FaceRecognition.verify(this.image, firebase.auth().currentUser.email)
+          console.log(res)
+          if (res.data.Errors) {
+            alert('🤕 ' + res.data.Errors[0].Message)
+          } else {
+            if (res.data.images[0].transaction.confidence > 0.5) {
+              let form = new FormData()
+              form.append('file', this.file)
+              const file = await axios({
+                method: 'post',
+                url: 'https://us-central1-secudubio-46ed5.cloudfunctions.net/decrypt',
+                data: form,
+                headers: {'Content-Type': 'multipart/form-data'}
               })
-              .catch(e => {
-                console.log(e)
-              })
-            //  console.log(file)
+              this.saveFile(file.data)
+              console.log(file)
+            } else {
+              alert('🤕 This file doesn\'t belong to you ! Thief !')
+            }
           }
         } else {
           alert('🤕 Take a photo and select a file before decrypting')
@@ -107,6 +111,16 @@ export default {
       } catch (e) {
         alert('🤕 ' + e)
       }
+    },
+    saveFile (file) {
+      const blob = new Blob([file], {type: 'text/plain'})
+      const e = document.createEvent('MouseEvents')
+      const a = document.createElement('a')
+      a.download = 'File'
+      a.href = window.URL.createObjectURL(blob)
+      a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+      e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+      a.dispatchEvent(e)
     }
   }
 }
