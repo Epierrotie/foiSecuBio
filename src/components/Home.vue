@@ -55,23 +55,39 @@ export default {
       this.image = this.canvas.toDataURL('image/png')
     },
     async encrypt () {
-      if (this.image && this.file) {
-        const res = await FaceRecognition.enroll(this.image, 'Joffrey')
-        console.log(res.data)
-        const file = await Cryptography.encrypt(this.file)
-        console.log(file)
-      } else {
-        alert('🤕 Take a photo and select a file before encrypting')
+      try {
+        if (this.image && this.file) {
+          const res = await FaceRecognition.enroll(this.image, 'Joffrey')
+          console.log(res.data)
+          if (res.data.Errors) {
+            alert('🤕 ' + res.data.Errors[0].Message)
+          } else {
+            const file = await Cryptography.encrypt(this.file.file)
+            console.log(file)
+          }
+        } else {
+          alert('🤕 Take a photo and select a file before encrypting')
+        }
+      } catch (e) {
+        alert('🤕 ' + e)
       }
     },
     async decrypt () {
-      if (this.image && this.file) {
-        const res = await FaceRecognition.verify(this.image, 'Joffrey')
-        console.log(res.data)
-        const file = await Cryptography.decrypt(this.file)
-        console.log(file)
-      } else {
-        alert('🤕 Take a photo and select a file before decrypting')
+      try {
+        if (this.image && this.file) {
+          const res = await FaceRecognition.verify(this.image, 'Joffrey')
+          console.log(res.data)
+          if (res.data.Errors) {
+            alert('🤕 ' + res.data.Errors[0].Message)
+          } else {
+            const file = await Cryptography.decrypt(this.file.file)
+            console.log(file)
+          }
+        } else {
+          alert('🤕 Take a photo and select a file before decrypting')
+        }
+      } catch (e) {
+        alert('🤕 ' + e)
       }
     }
   }

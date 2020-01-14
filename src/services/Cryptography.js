@@ -6,7 +6,7 @@ export default {
       'file': file
     }, {
       headers: {
-        'Content-Type': 'multipart/form'
+        'Content-Type': 'multipart/form-data'
       }
     })
   },
@@ -15,7 +15,7 @@ export default {
       'file': file
     }, {
       headers: {
-        'Content-Type': 'multipart/from'
+        'Content-Type': 'multipart/from-data'
       }
     })
   }
