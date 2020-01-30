@@ -18,7 +18,8 @@
   </a>
 </p>
 
-Sources files are available on [Github.com](https://github.com/Epierrotie/foiSecuBio)
+Sources files are available on [Github](https://github.com/Epierrotie/foiSecuBio)
+A demo is live on [Firebase](https://secudubio-46ed5.firebaseapp.com/)
 
 A website to encrypt files using facial recognition as a two-factor authenticator combined with google. Files are encrypted using `aes-256-gcm` via [Cryptr](https://github.com/MauriceButler/cryptr). Facial recognition is done trought [Kairos](https://kairos.com) facial recognition API.
 
